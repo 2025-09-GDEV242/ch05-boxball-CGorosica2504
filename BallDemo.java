@@ -12,8 +12,9 @@ import java.util.Random;
  * moves independently from each other and will interact with the box boundaries appropriately.
  *
  * @author Michael Kölling and David J. Barnes
- * @version 2016.02.29
- */
+ * @author Christian Gorosica
+ * @version 2025.10.27 
+*/
 
 public class BallDemo   
 {
