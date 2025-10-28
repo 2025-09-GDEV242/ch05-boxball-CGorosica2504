@@ -1,8 +1,15 @@
 import java.awt.Color;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
+
 
 /**
  * Class BallDemo - a short demonstration showing animation with the 
- * Canvas class. 
+ * Canvas class.
+ * 
+ * This class provides a visual simulation of balls moving and bouncing inside of a drawn box in the canvas. Each ball
+ * moves independently from each other and will interact with the box boundaries appropriately.
  *
  * @author Michael Kölling and David J. Barnes
  * @version 2016.02.29
@@ -12,6 +19,7 @@ public class BallDemo
 {
     private Canvas myCanvas;
     private Box box;
+    private Random rand = new Random();
 
     /**
      * Create a BallDemo object. Creates a fresh canvas and makes it visible.
@@ -26,13 +34,61 @@ public class BallDemo
     }
 
     /**
-     * boxBounce - simulate 5-50 balls bouncing within a box
+     * This method will simulate a collection of balls bouncing within a box.
+     * Each ball is placed within a random position in the box, will have a random color that
+     * is not close to white, and will move with random nonzero horizontal and vertical
+     * speeds.
+     * 
+     * The simulation will run indefinitely.
      * 
      * @param numOfBalls number of balls to simulate bouncing, clamped between 5-50. 
      */
-    public void boxBounce()
+    public void boxBounce(int numOfBalls)
     {
-        // you must implement this
+        //Clamp to have at least 5 balls
+        if (numOfBalls < 5) {
+            numOfBalls = 5;
+        }
+        
+        //Clamp to have no more than 50 balls
+        if (numOfBalls > 50) {
+            numOfBalls = 50;
+        }
+        
+        List<BoxBall> balls = new ArrayList<>();
+        
+        int left = box.getLeftWall();
+        int right = box.getRightWall();
+        int top = box.getTopWall();
+        int bottom = box.getBottomWall();
+        
+        //Using a for loop to initialize all of the balls
+        for (int i = 0; i < numOfBalls; i++) {
+            int diameter = 25;
+            int x = left + rand.nextInt((right - left) - diameter);
+            int y = top + rand.nextInt((bottom - top) - diameter);
+            
+            //Setting random colors but avoiding near white colors
+            int r = rand.nextInt(200);
+            int g = rand.nextInt(200);
+            int b = rand.nextInt(200);
+            Color color = new Color(r, g, b);
+            
+            BoxBall ball = new BoxBall(x, y, diameter, color, box, myCanvas);
+            ball.draw();
+            balls.add(ball);
+            
+        }
+        
+        boolean running = true;
+        while (running) {
+            myCanvas.wait(40);
+            
+            for (BoxBall b : balls) {
+                b.move();
+            }
+            box.draw();
+        }
     }
     
     /**
